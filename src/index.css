@@ -1,9 +1,12 @@
 :root {
   --primary-color: #9b92ff;
   --secondary-color: #fff9d8;
+  --terciary-color: #8eb8c8;
   --light-text-color: #ffffff;
   --text-color: #000000;
   --dark-blue: #282c34;
+  --darker-blue: #20252a;
+  --dark-blue-hover: #20252a;
 }
 
 body {
