@@ -34,16 +34,12 @@
   background: linear-gradient(90deg, var(--dark-blue), transparent);
   display: flex;
   flex-direction: column;
-  padding: .5em 0 1em;
+  padding: 0.5em 0 1em;
 
   a {
     text-decoration: none;
     color: var(--light-text-color);
     font-weight: bold;
-
-    &:hover {
-      color: var(--primary-color);
-    }
   }
 
   div {
@@ -51,6 +47,7 @@
 
     &:hover {
       background-color: var(--dark-blue-hover);
+      color: var(--primary-color);
     }
   }
 }

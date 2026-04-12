@@ -1,33 +1,33 @@
 import "./App.css";
-import Gallery from "./components/gallary";
+import Item from "./components/gallery/create/item";
+import Gallery from "./components/gallery/gallery";
 import { useState } from "react";
-
-const dropdownItems = [
-  { name: "Home", link: "/" },
-  { name: "Gallery", link: "/gallery" },
-  { name: "About", link: "/about" },
-  { name: "Contact", link: "/contact" },
-];
-
-function DropdownMenu() {
-  return (
-    <div className="dropdown-menu">
-      {dropdownItems.map((item) => (
-        <div>
-          <a key={item.name} href={item.link} className="dropdown-item">
-            {item.name}
-          </a>
-        </div>
-      ))}
-    </div>
-  );
-}
+import Login from "./components/login/login";
 
 function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [page, setPage] = useState(<Gallery />);
 
   function toggleDropdown() {
     setIsDropdownOpen(!isDropdownOpen);
+  }
+
+  const dropdownItems = [
+    { name: "Gallery", link: "javascript:void(0)", action: <Gallery /> },
+    { name: "Create", link: "javascript:void(0)", action: <Item /> },
+    { name: "Login", link: "javascript:void(0)", action: <Login /> },
+  ];
+
+  function DropdownMenu({ items }) {
+    return (
+      <div className="dropdown-menu">
+        {items.map((item) => (
+          <div key={item.name} onClick={() => setPage(item.action)}>
+            <a href={item.link} className="dropdown-item">{item.name}</a>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   return (
@@ -36,13 +36,16 @@ function App() {
         <div className="header-content">
           <img src="/artsy-logo.png" className="logo" alt="logo" />
           <h3>Torgs Art</h3>
-          <img src="/menu.svg" className="menu" onClick={toggleDropdown} />
+          <img
+            src="/menu.svg"
+            className="menu"
+            onClick={toggleDropdown}
+            alt="menu"
+          />
         </div>
-        {isDropdownOpen && <DropdownMenu />}
+        {isDropdownOpen && <DropdownMenu items={dropdownItems} />}
       </header>
-      <main>
-        <Gallery />
-      </main>
+      <main>{page}</main>
     </div>
   );
 }
