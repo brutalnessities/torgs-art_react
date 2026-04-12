@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import Login from "./components/login/login";
 import { supabase } from "./utils/supaBase";
 
-// test
 function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [page, setPage] = useState("gallery");
