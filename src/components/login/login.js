@@ -10,8 +10,6 @@ async function onSubmit(event) {
     email: input.username,
     password: input.password,
   });
-
-  await supabase.auth.getUser();
 }
 
 export default function Login() {

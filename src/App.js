@@ -1,31 +1,51 @@
 import "./App.css";
 import Item from "./components/gallery/create/item";
 import Gallery from "./components/gallery/gallery";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Login from "./components/login/login";
+import { supabase } from "./utils/supaBase";
 
 function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [page, setPage] = useState(<Gallery />);
+  const [page, setPage] = useState("gallery");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      },
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
 
   function toggleDropdown() {
     setIsDropdownOpen(!isDropdownOpen);
   }
 
-  const dropdownItems = [
-    { name: "Gallery", link: "javascript:void(0)", action: <Gallery /> },
-    { name: "Create", link: "javascript:void(0)", action: <Item /> },
-    { name: "Login", link: "javascript:void(0)", action: <Login /> },
-  ];
-
-  function DropdownMenu({ items }) {
+  function DropdownMenu() {
     return (
       <div className="dropdown-menu">
-        {items.map((item) => (
-          <div key={item.name} onClick={() => setPage(item.action)}>
-            <a href={item.link} className="dropdown-item">{item.name}</a>
-          </div>
-        ))}
+        <button key="gallery" onClick={() => setPage("gallery")}>
+          Gallery
+        </button>
+        {user && (
+          <button key="create" onClick={() => setPage("create")}>
+            Create
+          </button>
+        )}
+        {!user && (
+          <button key="login" onClick={() => setPage("login")}>
+            Login
+          </button>
+        )}
       </div>
     );
   }
@@ -43,9 +63,13 @@ function App() {
             alt="menu"
           />
         </div>
-        {isDropdownOpen && <DropdownMenu items={dropdownItems} />}
+        {isDropdownOpen && <DropdownMenu />}
       </header>
-      <main>{page}</main>
+      <main>
+        {page === "gallery" && <Gallery />}
+        {user && page === "create" && <Item />}
+        {!user && page === "login" && <Login />}
+      </main>
     </div>
   );
 }
