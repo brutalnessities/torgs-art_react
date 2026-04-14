@@ -1,0 +1,53 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  max-width: 400px;
+  margin: auto;
+
+  select,
+  input {
+    padding: 0.5em;
+    border-radius: 5px;
+    border: 1px solid var(--terciary-color);
+    height: 2em;
+    font-size: larger;
+
+    &:user-invalid {
+      background-color: rgba(255, 0, 0, 0.1);
+      border-color: red;
+    }
+  }
+
+  select {
+    height: 3em;
+  }
+
+  button {
+    background-color: var(--terciary-color);
+    color: white;
+    border: none;
+    padding: 0.75em;
+    border-radius: 5px;
+    font-size: larger;
+    cursor: pointer;
+
+    &:hover {
+      background-color: chartreuse;
+    }
+
+    &:valid {
+      background-color: var(--primary-color);
+    }
+
+    &:disabled {
+      background-color: rgba(128, 128, 128, 0.5);
+      pointer-events: none;
+    }
+  }
+
+  &:has(input:invalid) button {
+    background-color: rgba(128, 128, 128, 0.5);
+    pointer-events: none;
+  }
+}
