@@ -2,8 +2,7 @@ import "./item.css";
 import "styles/form.css";
 import { createItem } from "services/gallery";
 import { uploadImage } from "services/images";
-import Dialog from "shared/dialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 async function onSubmit(event, callback) {
   event.preventDefault();
