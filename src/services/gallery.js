@@ -1,6 +1,21 @@
-import { supabase } from "../utils/supaBase";
+import { supabase } from "utils/supaBase";
 const ITEMS_TABLE = "items";
 const ITEM_IMAGES_TABLE = "item_images";
+
+async function getImageUrl(pathOrUrl) {
+  if (!pathOrUrl) return null;
+
+  // already an external URL
+  if (pathOrUrl.startsWith("http")) {
+    return pathOrUrl;
+  }
+
+  // Supabase storage path
+  const { data } = await supabase.storage
+    .from("images/art")
+    .getPublicUrl(pathOrUrl);
+  return data.publicUrl;
+}
 
 // GET all items
 export async function getItems() {
@@ -23,7 +38,23 @@ export async function getItems() {
     `,
     )
     .order("order", { ascending: true })
-    .order("id", { ascending: false });
+    .order("id", { ascending: false })
+    .then(({ data, error }) => {
+      if (error) throw error;
+      return Promise.all(
+        data.map(async (item) => {
+          if (item.item_images && item.item_images.length > 0) {
+            item.item_images = await Promise.all(
+              item.item_images.map(async (img) => {
+                img.photo_url = await getImageUrl(img.photo_url);
+                return img;
+              }),
+            );
+          }
+          return item;
+        }),
+      );
+    });
 }
 
 // INSERT item
