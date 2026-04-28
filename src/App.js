@@ -7,12 +7,14 @@ import { supabase } from "./utils/supaBase";
 import Dialog from "./shared/dialog";
 
 function App() {
+  console.log('app')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [page, setPage] = useState("gallery");
   const [user, setUser] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
+    console.log('useeffect')
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
     });
@@ -70,7 +72,7 @@ function App() {
       <main>
         {page === "gallery" && <Gallery />}
         {!user && page === "login" && <Login />}
-        <Dialog isOpen={isDialogOpen}>
+        <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
           <Item onClose={() => setIsDialogOpen(false)} />
         </Dialog>
       </main>

@@ -4,7 +4,7 @@ import { supabase } from "utils/supaBase";
 export async function uploadImage(file) {
   try {
     const options = {
-      maxSizeMB: 1, // 🔥 target max size
+      maxSizeMB: 1,
       maxWidthOrHeight: 1920, // optional resize
       useWebWorker: true,
     };

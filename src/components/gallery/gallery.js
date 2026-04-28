@@ -15,28 +15,30 @@ export default function Gallery() {
     return data.map((one, index) => {
       const { description, photo_url } = one.item_images?.[0] ?? {};
       return (
-        <div key={index} className={`item-${index}`}>
-          <h2>
-            <i>
-              {one.id}
-              {one.title ?? "Untitled"}
-            </i>
-          </h2>
-          <p>
-            {one.height} x {one.width} {one.metric}
-          </p>
-          <p>{one.medium}</p>
-          <p>{one.location}</p>
-          <img
-            src={photo_url}
-            alt={one.title}
-            onClick={() =>
-              document
-                .querySelector(`.item-${index}`)
-                .classList.toggle("expanded")
-            }
-          />
-          <p>{description}</p>
+        <div key={index} className={`item-${index} holo`}>
+          <div className="content">
+            <h2>
+              <i>
+                {one.id}
+                {one.title ?? "Untitled"}
+              </i>
+            </h2>
+            <p>
+              {one.height} x {one.width} {one.metric}
+            </p>
+            <p>{one.medium}</p>
+            <p>{one.location}</p>
+            <img
+              src={photo_url}
+              alt={one.title}
+              onClick={() =>
+                document
+                  .querySelector(`.item-${index}`)
+                  .classList.toggle("expanded")
+              }
+            />
+            <p>{description}</p>
+          </div>
         </div>
       );
     });

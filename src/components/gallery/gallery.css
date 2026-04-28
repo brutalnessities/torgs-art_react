@@ -12,12 +12,30 @@
     cursor: pointer;
   }
 
-  div {
+  .content {
+    height: 100%;
+    background-color: var(--light-color);
+    border-radius: 10px;
+    border: 5px solid var(--terciary-color);
+    margin-top: -1em;
+    padding: 1em;
+    box-sizing: border-box;
+  }
+
+  div:not(.content) {
     padding: 1em;
     border-radius: 10px;
     border: 5px solid var(--terciary-color);
     background-color: var(--light-color);
-    flex: 1 1 30%;
+    flex: 1 1 25%;
+    align-content: end;
+  }
+
+  .holo {
+    background-image: url("/public/foil.svg"), url("/public/holo.avif");
+    background-attachment: scroll, fixed;
+    background-repeat: space, round;
+    background-blend-mode: overlay, normal;
   }
 }
 
