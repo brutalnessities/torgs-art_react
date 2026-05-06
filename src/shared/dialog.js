@@ -1,4 +1,4 @@
-import "./dialog.css";
+import "./dialog.sass";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 

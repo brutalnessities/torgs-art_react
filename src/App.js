@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.sass";
 import Item from "./components/gallery/create/item";
 import Gallery from "./components/gallery/gallery";
 import { useState, useEffect } from "react";
@@ -7,14 +7,12 @@ import { supabase } from "./utils/supaBase";
 import Dialog from "./shared/dialog";
 
 function App() {
-  console.log('app')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [page, setPage] = useState("gallery");
   const [user, setUser] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
-    console.log('useeffect')
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
     });
