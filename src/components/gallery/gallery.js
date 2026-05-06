@@ -8,34 +8,51 @@ export default function Gallery() {
   const containerRef = useRef();
   const [hasStarted, setHasStarted] = useState(false);
 
-  function setupScroll() {
-    const parent = containerRef.current.parentElement;
-    const wrapper = containerRef.current;
-    console.log({hasStarted, el: parent, dataLength: data.length});
-    if (hasStarted || !parent || data.length === 0) return;
-    setHasStarted(true);
-    console.log("starting scroll");
-    parent.addEventListener("scroll", () => {
-      console.log(parent.scrollLeft)
-      // if scroll position is at the start or end, jump to the opposite end
-      if (parent.scrollLeft === 0) {
-        // parent.scrollTo(parent.scrollWidth / 2, {behavior: "auto"});
-        requestAnimationFrame(() => {
-          parent.scrollTo((parent.scrollWidth / 2) + 1, {behavior: "auto"});
-        });
-      } else if (parent.scrollLeft >= wrapper.scrollWidth - parent.clientWidth) {
-        // parent.scrollTo((parent.scrollWidth / 2) - parent.clientWidth, {behavior: "auto"});
-        requestAnimationFrame(() => {
-          parent.scrollTo((parent.scrollWidth / 2) - parent.clientWidth - 1, {behavior: "auto"});
-        });
-      }
-    });
-  }
+  let startX = 0;
+  let virtualX = 0;
+  const speed = .5;
+
+  window.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+  });
+
+  window.addEventListener("touchmove", (e) => {
+    const delta = startX - e.touches[0].clientX;
+    virtualX += delta;
+    startX = e.touches[0].clientX;
+  });
+
+  window.addEventListener(
+    "wheel",
+    (e) => {
+      e.preventDefault();
+      virtualX += (e.deltaX || e.deltaY) * speed;
+      requestAnimationFrame(animate);
+    },
+    { passive: false },
+  );
 
   // scroll on wheel
   useEffect(() => {
     setupScroll();
   }, [containerRef, data]);
+
+  function setupScroll() {
+    const parent = containerRef.current.parentElement;
+    const wrapper = containerRef.current;
+    if (hasStarted || !parent || data.length === 0) return;
+    setHasStarted(true);
+    const scrollAmount = wrapper.scrollWidth / 3;
+    wrapper.style.transform = `translateX(${-scrollAmount}px)`;
+    virtualX -= scrollAmount;
+  }
+
+  function animate() {
+    const loopWidth = containerRef.current.scrollWidth / 3;
+    virtualX = virtualX % loopWidth;
+    containerRef.current.style.transformBehavior = "smooth";
+    containerRef.current.style.transform = `translateX(${virtualX - loopWidth}px)`;
+  }
 
   // load items on mount
   useEffect(() => {
@@ -46,7 +63,6 @@ export default function Gallery() {
     if ((!data || data.length === 0) && !dupe) return <p>No items found.</p>;
 
     return data.map((one, index) => {
-      if (index > 3) return null; // testing
       const isPortrait = one.height > one.width;
       const { description, photo_url } = one.item_images?.[0] ?? {};
       return (
@@ -54,7 +70,6 @@ export default function Gallery() {
           key={index}
           className={`item-${index} holo ${isPortrait ? "portrait" : "landscape"} ${dupe ? "dupe" : ""}`}
         >
-          {/* <div className="content"> */}
           <h2>
             <i>
               {one.id}
@@ -76,7 +91,6 @@ export default function Gallery() {
             }
           />
           <p>{description}</p>
-          {/* </div> */}
         </div>
       );
     });
@@ -92,7 +106,7 @@ export default function Gallery() {
     <section id="gallery" ref={containerRef}>
       {items}
       {items}
-      {/* {items} */}
+      {items}
     </section>
   );
 }
