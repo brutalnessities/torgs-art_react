@@ -1,0 +1,45 @@
+$component-padding: 2em
+
+main
+  min-width: 100%
+  overflow: scroll hidden
+
+  scroll-timeline: --scroll-timeline x
+  /* Firefox supports the non-standard vertical/horizontal syntax */
+  scroll-timeline: --scroll-timeline horizontal
+
+#gallery
+  animation: scrolling 1ms linear
+  animation-timeline: --scroll-timeline
+  height: calc(100% - $component-padding * 2)
+  padding: $component-padding
+  gap: 2em
+  display: flex
+  scroll-snap-type: x mandatory
+  scroll-behavior: smooth
+  // width: max-content
+
+
+  img
+    max-height: 50vh
+    width: 50vw
+    object-fit: cover
+
+  div[class*="item-"]
+    padding: 1em
+    border-radius: 10px
+    border: 5px solid var(--terciary-color)
+    background-color: var(--light-color)
+    scroll-snap-align: center
+    max-width: 90vw
+    min-width: 50vw
+
+// @keyframes scrolling
+//   0%
+//     transform: translateX(-33%)
+//   33%
+//     transform: translateX(66%)
+//   66%
+//     transform: translateX(33%)
+//   100%
+//     transform: translateX(66%)
