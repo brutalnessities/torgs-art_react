@@ -10,16 +10,61 @@ main
   gap: 2em
   display: flex
 
-  img
-    max-height: 50vh
-    width: 50vw
-    object-fit: cover
-
+  //card wrapper
   div[class*="item-"]
-    padding: 1em
+  max-width: 50vw
+  min-width: 50vw
+
+  //animation for the card flip
+  .flip-card
+    perspective: 1000px
+    position: relative
+
+  .inner-card
+    transform-style: preserve-3d
+    transition: transform 1s
+    height: 100%
+    display: flex
+    align-items: center
+
+    .bg
+      position: absolute
+      inset: 0
+      background-size: cover
+      filter: blur(20px)
+      z-index: -1
+    
+
+  .flip-card:hover .inner-card
+    transform: rotateY(180deg)
+    backface-visibility: hidden
+
+  .flip-card
+    height: stretch
+    width: 100%
+
+  // front of card
+  .front
+    border-radius: 10px
+    border: 5px solid var(--terciary-color)
+    // background-color: var(--light-color)
+
+  .front
+  img
+    height: stretch
+    max-height: 100%
+    width: stretch
+    object-fit: contain
+
+  // back of card
+  .back
     border-radius: 10px
     border: 5px solid var(--terciary-color)
     background-color: var(--light-color)
-    scroll-snap-align: center
-    max-width: 90vw
-    min-width: 50vw
+    padding: 4em
+    width: stretch
+    position: absolute
+    height: stretch
+    backface-visibility: hidden
+    transform: rotateY(180deg)
+    background-color: var(--light-color)

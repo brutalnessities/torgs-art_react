@@ -10,7 +10,7 @@ export default function Gallery() {
 
   let startX = 0;
   let virtualX = 0;
-  const speed = .5;
+  const speed = 0.5;
 
   window.addEventListener("touchstart", (e) => {
     startX = e.touches[0].clientX;
@@ -59,8 +59,8 @@ export default function Gallery() {
     setItems();
   }, []);
 
-  function makeItems(data, dupe = false) {
-    if ((!data || data.length === 0) && !dupe) return <p>No items found.</p>;
+  function makeItems(data) {
+    if (!data || data.length === 0) return <p>No items found.</p>;
 
     return data.map((one, index) => {
       const isPortrait = one.height > one.width;
@@ -68,29 +68,34 @@ export default function Gallery() {
       return (
         <div
           key={index}
-          className={`item-${index} holo ${isPortrait ? "portrait" : "landscape"} ${dupe ? "dupe" : ""}`}
+          className={`flip-card item-${index} ${isPortrait ? "portrait" : "landscape"}`}
         >
-          <h2>
-            <i>
-              {one.id}
-              {one.title ?? "Untitled"}
-            </i>
-          </h2>
-          <p>
-            {one.height} x {one.width} {one.metric}
-          </p>
-          <p>{one.medium}</p>
-          <p>{one.location}</p>
-          <img
-            src={photo_url}
-            alt={one.title}
-            onClick={() =>
-              document
-                .querySelector(`.item-${index}`)
-                .classList.toggle("expanded")
-            }
-          />
-          <p>{description}</p>
+          <div className="inner-card">
+            <img
+              className="front"
+              src={photo_url}
+              alt={one.title}
+              onClick={() =>
+                document
+                  .querySelector(`.item-${index}`)
+                  .classList.toggle("expanded")
+              }
+            />
+
+            <section className="back">
+              <h2>
+                <i>{one.title ?? "Untitled"}</i>
+              </h2>
+              <p>
+                {one.height} x {one.width} {one.metric}
+              </p>
+              <p>{one.medium}</p>
+              <p>{one.location}</p>
+              <p>{description}</p>
+            </section>
+
+            <div className="bg" style={{ backgroundImage: `url(${photo_url})` }}></div>
+          </div>
         </div>
       );
     });
