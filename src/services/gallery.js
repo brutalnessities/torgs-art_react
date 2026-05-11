@@ -2,7 +2,7 @@ import { supabase } from "utils/supaBase";
 const ITEMS_TABLE = "items";
 const ITEM_IMAGES_TABLE = "item_images";
 
-async function getImageUrl(pathOrUrl) {
+async function GET_IMAGE_URL(pathOrUrl) {
   if (!pathOrUrl) return null;
 
   // already an external URL
@@ -18,7 +18,7 @@ async function getImageUrl(pathOrUrl) {
 }
 
 // GET all items
-export async function getItems() {
+export async function GET_ITEMS() {
   return await supabase
     .from(ITEMS_TABLE)
     .select(
@@ -46,7 +46,7 @@ export async function getItems() {
           if (item.item_images && item.item_images.length > 0) {
             item.item_images = await Promise.all(
               item.item_images.map(async (img) => {
-                img.photo_url = await getImageUrl(img.photo_url);
+                img.photo_url = await GET_IMAGE_URL(img.photo_url);
                 return img;
               }),
             );

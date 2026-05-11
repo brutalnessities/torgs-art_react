@@ -1,7 +1,7 @@
 // import "./gallery.sass";
 import "./museum.sass";
 import { useEffect, useState, useRef } from "react";
-import { getItems } from "services/gallery";
+import { GET_ITEMS } from "services/gallery";
 
 export default function Gallery() {
   const [virtualX, setVirtualX] = useState(0);
@@ -89,13 +89,13 @@ export default function Gallery() {
 
   function makeItems(data) {
     if (!data || data.length === 0) return <p>No items found.</p>;
-
+    activeItem === null && setActiveItem(0);
     return data.map((one, index) => {
       const { photo_url } = one?.item_images?.[0] ?? {};
       return (
         <div
           key={index}
-          className={`item-${index} ${index === 0 ? "active" : ""}`}
+          className={`item-${index} card ${index === 0 ? "active" : ""}`}
         >
           <img
             className="inner-card"
@@ -120,7 +120,7 @@ export default function Gallery() {
   }
 
   async function setItems() {
-    setData(await getItems());
+    setData(await GET_ITEMS());
   }
 
   const items = makeItems(data);
