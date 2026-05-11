@@ -1,12 +1,13 @@
 // import "./gallery.sass";
 import "./museum.sass";
-import { useEffect, useState, useRef, use } from "react";
+import { useEffect, useState, useRef, use, act } from "react";
 import { getItems } from "services/gallery";
 
 export default function Gallery() {
   const [data, setData] = useState([]);
   const containerRef = useRef();
   const [hasStarted, setHasStarted] = useState(false);
+  const [activeItem, setActiveItem] = useState(null);
 
   let startX = 0;
   let virtualX = 0;
@@ -20,6 +21,10 @@ export default function Gallery() {
     const delta = startX - e.touches[0].clientX;
     virtualX += delta;
     startX = e.touches[0].clientX;
+  });
+
+  window.addEventListener("arrow", (val) => {
+    virtualX += val;
   });
 
   window.addEventListener(
@@ -63,55 +68,79 @@ export default function Gallery() {
     if (!data || data.length === 0) return <p>No items found.</p>;
 
     return data.map((one, index) => {
-      const isPortrait = one.height > one.width;
-      const { description, photo_url } = one.item_images?.[0] ?? {};
+      const { photo_url } = one.item_images?.[0] ?? {};
       return (
         <div
           key={index}
-          className={`flip-card item-${index} ${isPortrait ? "portrait" : "landscape"}`}
+          className={`item-${index} ${index === 0 ? "active" : ""}`}
         >
-          <div className="inner-card">
-            <img
-              className="front"
-              src={photo_url}
-              alt={one.title}
-              onClick={() =>
-                document
-                  .querySelector(`.item-${index}`)
-                  .classList.toggle("expanded")
-              }
-            />
-
-            <section className="back">
-              <h2>
-                <i>{one.title ?? "Untitled"}</i>
-              </h2>
-              <p>
-                {one.height} x {one.width} {one.metric}
-              </p>
-              <p>{one.medium}</p>
-              <p>{one.location}</p>
-              <p>{description}</p>
-            </section>
-
-            <div className="bg" style={{ backgroundImage: `url(${photo_url})` }}></div>
-          </div>
+          <img
+            className="inner-card"
+            src={photo_url}
+            alt={one.title}
+            onClick={() => {
+              setActiveItem(index);
+              // add active class to clicked item and remove from others
+              const items = document.querySelectorAll("#gallery > div");
+              items.forEach((item, i) => {
+                if (i % data.length === index % data.length) {
+                  item.classList.add("active");
+                } else {
+                  item.classList.remove("active");
+                }
+              });
+            }}
+          />
         </div>
       );
     });
   }
 
   async function setItems() {
-    setData(await getItems());
+    setData(await getItems().then((res) => {
+      setActiveItem(0);
+      return res}).catch((err) => console.error(err)));
   }
 
   const items = makeItems(data);
 
   return (
-    <section id="gallery" ref={containerRef}>
-      {items}
-      {items}
-      {items}
-    </section>
+    <div id="museum">
+      <section id="gallery" ref={containerRef}>
+        {items}
+        {items}
+        {items}
+      </section>
+      <section id="display">
+        {activeItem !== null && (
+          <>
+            <div className="image-container">
+              <img
+                src={data[activeItem].item_images?.[0]?.photo_url}
+                alt={data[activeItem].title}
+              />
+              <div
+                className="bg"
+                style={{
+                  backgroundImage: `url(${data[activeItem].item_images?.[0]?.photo_url})`,
+                }}
+              ></div>
+            </div>
+            <div className="info">
+              <h2>
+                <i>{data[activeItem].title ?? "Untitled"}</i>
+              </h2>
+              <p>
+                {data[activeItem].height} x {data[activeItem].width}{" "}
+                {data[activeItem].metric}
+              </p>
+              <p>{data[activeItem].medium}</p>
+              <p>{data[activeItem].location}</p>
+              <p>{data[activeItem].item_images?.[0]?.description}</p>
+            </div>
+          </>
+        )}
+      </section>
+    </div>
   );
 }
