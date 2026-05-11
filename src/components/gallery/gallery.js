@@ -1,11 +1,11 @@
 // import "./gallery.sass";
 import "./museum.sass";
-import { useEffect, useState, useRef, use, act } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getItems } from "services/gallery";
 
 export default function Gallery() {
-  let virtualX = 0;
-  const speed = 0.5;
+  const [virtualX, setVirtualX] = useState(0);
+  const speed = .001;
   const [data, setData] = useState([]);
   const containerRef = useRef();
   const [hasStarted, setHasStarted] = useState(false);
@@ -45,7 +45,7 @@ export default function Gallery() {
       if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
         e.preventDefault();
         const delta = e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 1;
-        virtualX += delta * 50; // adjust scroll speed as needed
+        setVirtualX((prev) => prev + delta * 50); // adjust scroll speed as needed
         requestAnimationFrame(animate);
       }
     },
@@ -56,18 +56,21 @@ export default function Gallery() {
     "wheel",
     (e) => {
       e.preventDefault();
-      virtualX += (e.deltaX || e.deltaY) * speed;
+      setVirtualX((prev) => prev + (e.deltaX || e.deltaY) * speed);
       requestAnimationFrame(animate);
     },
     { passive: false },
   );
 
+  function animate() {
+    const loopWidth = containerRef.current.scrollWidth / 3;
+    setVirtualX((prev) => prev % loopWidth);
+    containerRef.current.style.transformBehavior = "smooth";
+    containerRef.current.style.transform = `translateX(${virtualX - loopWidth}px)`;
+  }
+  
   // scroll on wheel
   useEffect(() => {
-    setupScroll();
-  }, [containerRef, data]);
-
-  function setupScroll() {
     if (isMobile()) return;
     console.log("setting up scroll");
     const parent = containerRef.current.parentElement;
@@ -76,15 +79,8 @@ export default function Gallery() {
     setHasStarted(true);
     const scrollAmount = wrapper.scrollWidth / 3;
     wrapper.style.transform = `translateX(${-scrollAmount}px)`;
-    virtualX -= scrollAmount;
-  }
-
-  function animate() {
-    const loopWidth = containerRef.current.scrollWidth / 3;
-    virtualX = virtualX % loopWidth;
-    containerRef.current.style.transformBehavior = "smooth";
-    containerRef.current.style.transform = `translateX(${virtualX - loopWidth}px)`;
-  }
+    setVirtualX((prev) => prev - scrollAmount);
+  }, [containerRef, data, virtualX, hasStarted]);
 
   // load items on mount
   useEffect(() => {
