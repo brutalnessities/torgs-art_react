@@ -1,4 +1,4 @@
-import "../gallery/create/item"; //for now just copy the item css, but will likely need to be changed
+import "../gallery/create/item"; //for now just copy the item sass, but will likely need to be changed
 import { supabase } from "utils/supaBase";
 
 async function onSubmit(event) {
