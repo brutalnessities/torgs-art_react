@@ -4,28 +4,53 @@ import { useEffect, useState, useRef, use, act } from "react";
 import { getItems } from "services/gallery";
 
 export default function Gallery() {
+  let virtualX = 0;
+  const speed = 0.5;
   const [data, setData] = useState([]);
   const containerRef = useRef();
   const [hasStarted, setHasStarted] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
 
-  let startX = 0;
-  let virtualX = 0;
-  const speed = 0.5;
+  function isMobile() {
+    const out = () => {
+      switch (true) {
+        // test if pointer is coarse (touchscreen)
+        case window.matchMedia("(pointer: coarse)").matches:
+          return true;
+        case /Android/i.test(navigator.userAgent):
+          return true;
+        case /webOS/i.test(navigator.userAgent):
+          return true;
+        case /iPhone/i.test(navigator.userAgent):
+          return true;
+        case /iPad/i.test(navigator.userAgent):
+          return true;
+        case /iPod/i.test(navigator.userAgent):
+          return true;
+        case /BlackBerry/i.test(navigator.userAgent):
+          return true;
+        case /Windows Phone/i.test(navigator.userAgent):
+          return true;
+        default:
+          return false;
+      }
+    };
+    return out();
+  }
 
-  window.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].clientX;
-  });
-
-  window.addEventListener("touchmove", (e) => {
-    const delta = startX - e.touches[0].clientX;
-    virtualX += delta;
-    startX = e.touches[0].clientX;
-  });
-
-  window.addEventListener("arrow", (val) => {
-    virtualX += val;
-  });
+  //all arrow keys
+  window.addEventListener(
+    "keydown",
+    (e) => {
+      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
+        e.preventDefault();
+        const delta = e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 1;
+        virtualX += delta * 50; // adjust scroll speed as needed
+        requestAnimationFrame(animate);
+      }
+    },
+    { passive: false },
+  );
 
   window.addEventListener(
     "wheel",
@@ -43,6 +68,8 @@ export default function Gallery() {
   }, [containerRef, data]);
 
   function setupScroll() {
+    if (isMobile()) return;
+    console.log("setting up scroll");
     const parent = containerRef.current.parentElement;
     const wrapper = containerRef.current;
     if (hasStarted || !parent || data.length === 0) return;
@@ -68,7 +95,7 @@ export default function Gallery() {
     if (!data || data.length === 0) return <p>No items found.</p>;
 
     return data.map((one, index) => {
-      const { photo_url } = one.item_images?.[0] ?? {};
+      const { photo_url } = one?.item_images?.[0] ?? {};
       return (
         <div
           key={index}
@@ -97,9 +124,7 @@ export default function Gallery() {
   }
 
   async function setItems() {
-    setData(await getItems().then((res) => {
-      setActiveItem(0);
-      return res}).catch((err) => console.error(err)));
+    setData(await getItems());
   }
 
   const items = makeItems(data);
@@ -116,27 +141,27 @@ export default function Gallery() {
           <>
             <div className="image-container">
               <img
-                src={data[activeItem].item_images?.[0]?.photo_url}
-                alt={data[activeItem].title}
+                src={data[activeItem]?.item_images?.[0]?.photo_url}
+                alt={data[activeItem]?.title}
               />
               <div
                 className="bg"
                 style={{
-                  backgroundImage: `url(${data[activeItem].item_images?.[0]?.photo_url})`,
+                  backgroundImage: `url(${data[activeItem]?.item_images?.[0]?.photo_url})`,
                 }}
               ></div>
             </div>
             <div className="info">
               <h2>
-                <i>{data[activeItem].title ?? "Untitled"}</i>
+                <i>{data[activeItem]?.title ?? "Untitled"}</i>
               </h2>
               <p>
-                {data[activeItem].height} x {data[activeItem].width}{" "}
-                {data[activeItem].metric}
+                {data[activeItem]?.height} x {data[activeItem]?.width}{" "}
+                {data[activeItem]?.metric}
               </p>
-              <p>{data[activeItem].medium}</p>
-              <p>{data[activeItem].location}</p>
-              <p>{data[activeItem].item_images?.[0]?.description}</p>
+              <p>{data[activeItem]?.medium}</p>
+              <p>{data[activeItem]?.location}</p>
+              <p>{data[activeItem]?.item_images?.[0]?.description}</p>
             </div>
           </>
         )}

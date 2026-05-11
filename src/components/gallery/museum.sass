@@ -59,7 +59,30 @@ main
     .bg
       position: absolute
       inset: 0
-      background-size: 100% 100%
+      top: -30px
+      left: -30px
+      height: calc(100% + 60px)
+      width: calc(100% + 60px)
+      background-size: cover
       background-repeat: no-repeat
       filter: blur(20px)
       z-index: -1
+
+// mobile styles
+@media (pointer: coarse)
+  main 
+    overflow: hidden
+  #gallery
+    max-width: 100vw
+    min-width: 100vw
+    max-height: 20%
+    overflow: scroll hidden
+  #museum
+    #display
+      .image-container
+        img
+          max-width: 100vw
+      .info
+        display: none
+      .bg
+        display: none
