@@ -1,8 +1,8 @@
-import { supabase } from "utils/supaBase";
+import { supabase } from "../utils/supaBase";
 const ITEMS_TABLE = "items";
 const ITEM_IMAGES_TABLE = "item_images";
 
-async function GET_IMAGE_URL(pathOrUrl) {
+async function GET_IMAGE_URL(pathOrUrl: string) {
   if (!pathOrUrl) return null;
 
   // already an external URL
@@ -58,7 +58,7 @@ export async function GET_ITEMS() {
 }
 
 // INSERT item
-export async function createItem(data) {
+export async function createItem(data: any) {
   const { data: item, error: itemError } = await supabase
     .from(ITEMS_TABLE)
     .insert([
@@ -91,11 +91,11 @@ export async function createItem(data) {
 }
 
 // DELETE item
-export async function deleteItem(id) {
+export async function deleteItem(id: number) {
   return await supabase.from(ITEMS_TABLE).delete().eq("id", id);
 }
 
 // EDIT item
-export async function updateItem(id, title) {
+export async function updateItem(id: number, title: string) {
   return await supabase.from(ITEMS_TABLE).update({ title }).eq("id", id);
 }

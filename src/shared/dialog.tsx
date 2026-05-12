@@ -2,9 +2,9 @@ import "./dialog.sass";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
-export default function Dialog({ isOpen, onClose, children }) {
+export default function Dialog({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) {
   useEffect(() => {
-    function handleEsc(e) {
+    function handleEsc(e: KeyboardEvent) {
       if (e.key === "Escape") {
         onClose();
       }
@@ -23,12 +23,16 @@ export default function Dialog({ isOpen, onClose, children }) {
 
   if (!isOpen) return null;
 
+  const modalRoot = document.getElementById("modal-root");
+
+  if (!modalRoot) return null;
+
   return createPortal(
     <div className="overlay" onClick={onClose}>
       <div className="dialog" onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
     </div>,
-    document.getElementById("modal-root"),
+    modalRoot,
   );
 }

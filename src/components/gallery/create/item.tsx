@@ -1,21 +1,29 @@
 import "./item.sass";
-import "styles/form.sass";
-import { createItem } from "services/gallery";
-import { uploadImage } from "services/images";
+import "../../../styles/form.sass";
+import { createItem } from "../../../services/gallery";
+import { uploadImage } from "../../../services/images";
 import { useState } from "react";
 
-async function onSubmit(event, callback) {
+async function onSubmit(event: any, callback: () => void) {
   event.preventDefault();
 
   // disable the submit button to prevent multiple submissions
   event.target.querySelector('button[type="submit"]').disabled = true;
 
   const formData = new FormData(event.target);
-  const input = Object.fromEntries(formData);
+  const input = Object.fromEntries(formData) as Record<string, FormDataEntryValue>;
 
   // // first upload the image, then create the item with the returned URL
-  if (input.imageFile) {
-    const { data, error } = await uploadImage(input.imageFile);
+  const imageFile = formData.get("imageFile");
+  if (imageFile instanceof File) {
+    const result = await uploadImage(imageFile);
+
+    if (!result) {
+      window.alert("Image upload failed");
+      return;
+    }
+
+    const { data, error } = result;
 
     if (error) {
       window.alert("Image upload failed");
@@ -23,8 +31,7 @@ async function onSubmit(event, callback) {
     }
 
     if (data && data.path) {
-      input.imageUrl = data.path;
-      await createItem(input);
+      await createItem({ ...input, imageUrl: data.path });
     }
   }
 
@@ -32,17 +39,17 @@ async function onSubmit(event, callback) {
   callback();
 }
 
-export default function Item({ onClose }) {
-  const [preview, setPreview] = useState(null);
+export default function Item({ onClose }: { onClose: () => void }) {
+  const [preview, setPreview] = useState<string | null>(null);
 
-  function submit(event) {
+  function submit(event: any) {
     onSubmit(event, () => {
       setPreview(null);
       onClose();
     });
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -72,7 +79,7 @@ export default function Item({ onClose }) {
         <section className="row">
           <input type="number" name="height" placeholder="Height" required />
           <input type="number" name="width" placeholder="Width" required />
-          <select name="metric" placeholder="Metric">
+          <select name="metric" defaultValue="in" required>
             <option value="in">in</option>
             <option value="ft">ft</option>
           </select>

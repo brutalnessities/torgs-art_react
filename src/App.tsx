@@ -9,7 +9,7 @@ import Dialog from "./shared/dialog";
 function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [page, setPage] = useState("gallery");
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
