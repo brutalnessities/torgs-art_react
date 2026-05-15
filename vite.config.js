@@ -6,7 +6,7 @@ import path from "path";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
-    outDir: "build", // CRA's default build output
+    outDir: "build", // CRA's default build outputs
   },
   resolve: {
     alias: {
