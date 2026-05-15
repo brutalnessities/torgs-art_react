@@ -1,9 +1,9 @@
 import "./App.sass";
-import Item from "./components/gallery/create/item";
-import Gallery from "./components/gallery/gallery";
+import Item from "@components/gallery/create/item";
+import Gallery from "@components/gallery/gallery";
 import { useState, useEffect } from "react";
-import Login from "./components/login/login";
-import { supabase } from "./utils/supaBase";
+import Login from "@components/login/login";
+import { supabase } from "@utils/supaBase";
 import Dialog from "./shared/dialog";
 
 function App() {

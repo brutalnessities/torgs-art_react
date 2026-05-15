@@ -1,4 +1,4 @@
-import { supabase } from "../utils/supaBase";
+import { supabase } from "@utils/supaBase";
 const ITEMS_TABLE = "items";
 const ITEM_IMAGES_TABLE = "item_images";
 

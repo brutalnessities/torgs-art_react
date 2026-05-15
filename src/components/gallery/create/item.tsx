@@ -1,7 +1,7 @@
 import "./item.sass";
-import "../../../styles/form.sass";
-import { createItem } from "../../../services/gallery";
-import { uploadImage } from "../../../services/images";
+import "@styles/form.sass";
+import { createItem } from "@services/gallery";
+import { uploadImage } from "@services/images";
 import { useState } from "react";
 
 async function onSubmit(event: any, callback: () => void) {

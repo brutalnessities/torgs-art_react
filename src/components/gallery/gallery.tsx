@@ -1,7 +1,7 @@
 import "./gallery.sass";
 import "./museum.sass";
 import { useEffect, useState, useRef } from "react";
-import { GET_ITEMS } from "../../services/gallery";
+import { GET_ITEMS } from "@services/gallery";
 
 export default function Gallery() {
   const [virtualX, setVirtualX] = useState<number>(0);

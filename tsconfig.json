@@ -3,12 +3,13 @@
   "compilerOptions": {
     // File Layout
     "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "./build",
+    "baseUrl": "./",
     "paths": {
-      "components/*": ["./components/*"],
-      "services/*": ["./services/*"],
-      "assets/*": ["./assets/*"],
-      "utils/*": ["./utils/*"]
+      "@components/*": ["./components/*"],
+      "@services/*": ["./services/*"],
+      "@styles/*": ["./styles/*"],
+      "@utils/*": ["./utils/*"]
     },
 
     // Environment Settings
