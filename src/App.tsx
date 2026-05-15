@@ -1,15 +1,15 @@
 import "./App.sass";
-import Item from "./components/gallery/create/item";
-import Gallery from "./components/gallery/gallery";
+import Item from "@components/gallery/create/item";
+import Gallery from "@components/gallery/gallery";
 import { useState, useEffect } from "react";
-import Login from "./components/login/login";
-import { supabase } from "./utils/supaBase";
+import Login from "@components/login/login";
+import { supabase } from "@utils/supaBase";
 import Dialog from "./shared/dialog";
 
 function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [page, setPage] = useState("gallery");
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {

@@ -1,14 +1,14 @@
 import "../gallery/create/item"; //for now just copy the item sass, but will likely need to be changed
-import { supabase } from "utils/supaBase";
+import { supabase } from "@utils/supaBase";
 
-async function onSubmit(event) {
+async function onSubmit(event: any) {
   event.preventDefault();
   const formData = new FormData(event.target);
   const input = Object.fromEntries(formData);
 
   await supabase.auth.signInWithPassword({
-    email: input.username,
-    password: input.password,
+    email: `${input.username}`,
+    password: `${input.password}`,
   });
 }
 

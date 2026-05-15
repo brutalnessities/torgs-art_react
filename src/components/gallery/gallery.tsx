@@ -1,15 +1,15 @@
-// import "./gallery.sass";
+import "./gallery.sass";
 import "./museum.sass";
 import { useEffect, useState, useRef } from "react";
-import { GET_ITEMS } from "services/gallery";
+import { GET_ITEMS } from "@services/gallery";
 
 export default function Gallery() {
-  const [virtualX, setVirtualX] = useState(0);
+  const [virtualX, setVirtualX] = useState<number>(0);
   const speed = .001;
-  const [data, setData] = useState([]);
-  const containerRef = useRef();
-  const [hasStarted, setHasStarted] = useState(false);
-  const [activeItem, setActiveItem] = useState(null);
+  const [data, setData] = useState<any[]>([]);
+  const containerRef = useRef<any>(null);
+  const [hasStarted, setHasStarted] = useState<boolean>(false);
+  const [activeItem, setActiveItem] = useState<number | null>(null);
 
   function isMobile() {
     const out = () => {
@@ -63,7 +63,7 @@ export default function Gallery() {
   );
 
   function animate() {
-    const loopWidth = containerRef.current.scrollWidth / 3;
+    const loopWidth = containerRef.current.parentElement.offsetWidth;
     setVirtualX((prev) => prev % loopWidth);
     containerRef.current.style.transformBehavior = "smooth";
     containerRef.current.style.transform = `translateX(${virtualX - loopWidth}px)`;
@@ -87,7 +87,7 @@ export default function Gallery() {
     setItems();
   }, []);
 
-  function makeItems(data) {
+  function makeItems(data: any[]) {
     if (!data || data.length === 0) return <p>No items found.</p>;
     activeItem === null && setActiveItem(0);
     return data.map((one, index) => {

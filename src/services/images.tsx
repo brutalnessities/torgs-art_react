@@ -1,7 +1,7 @@
 import imageCompression from "browser-image-compression";
-import { supabase } from "utils/supaBase";
+import { supabase } from "../utils/supaBase";
 
-export async function uploadImage(file) {
+export async function uploadImage(file: File) {
   try {
     const options = {
       maxSizeMB: 1,
