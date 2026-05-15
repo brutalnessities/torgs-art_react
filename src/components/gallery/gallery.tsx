@@ -63,7 +63,7 @@ export default function Gallery() {
   );
 
   function animate() {
-    const loopWidth = containerRef.current.scrollWidth / 3;
+    const loopWidth = containerRef.current.parentElement.offsetWidth;
     setVirtualX((prev) => prev % loopWidth);
     containerRef.current.style.transformBehavior = "smooth";
     containerRef.current.style.transform = `translateX(${virtualX - loopWidth}px)`;
